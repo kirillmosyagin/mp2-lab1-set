@@ -150,10 +150,10 @@ TBitField TBitField::operator&(const TBitField &bf) // операция "и"
 {
 	TBitField tmp(bf);
 
-	if (bf.BitLen >= BitLen)
+	if (bf.BitLen > this->BitLen)
 	{
 		tmp = *this;
-		for (int i = 0; i < MemLen; i++)
+		for (int i = 0; i < this->MemLen; i++)
 		{
 			tmp.pMem[i] = tmp.pMem[i] & bf.pMem[i];
 		}
