@@ -6,7 +6,6 @@
 // Битовое поле
 
 #include "tbitfield.h"
-typedef unsigned int TELEM;
 
 TBitField::TBitField(int len)
 {
@@ -14,7 +13,9 @@ TBitField::TBitField(int len)
 		throw exception("you cant set bit with negative lenght");
 
 	BitLen = len;
-	MemLen = len / (sizeof(TELEM) * 8) + 1;
+	MemLen = len / (sizeof(TELEM) * 8);
+	if (len > MemLen*sizeof(TELEM)*8)
+		MemLen++;
 	pMem = new TELEM[MemLen]{ 0 };
 }
 
@@ -190,19 +191,14 @@ TBitField TBitField::operator~(void) // отрицание
 
 istream &operator>>(istream &istr, TBitField &bf) // ввод
 {
-	int i = 0;
-	char c;
-	do
+	unsigned int tmp;
+	for (size_t i = 0; i < bf.GetLength(); i++)
 	{
-		istr >> c;
-	} while (c != ' ');
-	while (true)
-	{
-		istr >> c;
-		if (c == '0')
-			bf.ClrBit(i++);
-		else if (c == '1')
-			bf.SetBit(i++);
+		istr >> tmp;
+		if (tmp == 0)
+			bf.ClrBit(i);
+		else if (tmp == 1)
+			bf.SetBit(i);
 		else break;
 	}
 
@@ -213,7 +209,7 @@ ostream &operator<<(ostream &ostr, const TBitField &bf) // вывод
 {
 	for (size_t i = 0; i < bf.GetLength(); ++i)
 	{
-		ostr << (bf.GetBit(i) ? '1' : '0');
+		ostr << (bf.GetBit(i) ? 1 : 0);
 	}
 	return ostr;
 }

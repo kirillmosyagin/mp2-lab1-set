@@ -113,6 +113,15 @@ TSet TSet::operator~(void) // дополнение
 
 istream &operator>>(istream &istr, TSet &s) // ввод
 {
+    unsigned int tmp;
+    char end;
+    do{
+        istr >> tmp >> end;
+        if (tmp < s.GetMaxPower())
+            s.InsElem(tmp);
+        else 
+            break;
+    } while (end == ', ');
     return istr;
 }
 
